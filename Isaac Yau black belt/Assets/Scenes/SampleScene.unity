@@ -6194,7 +6194,7 @@ GameObject:
   - component: {fileID: 7921840403852143240}
   - component: {fileID: 7921840403852143241}
   m_Layer: 0
-  m_Name: AvatarPoint_1_Hips
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6220,6 +6220,8 @@ MonoBehaviour:
   playerBody: {fileID: 0}
   isOnWall: 0
   isOnGround: 1
+  rightCollision: 0
+  leftCollision: 0
 --- !u!54 &7921840403852143241
 Rigidbody:
   m_ObjectHideFlags: 0
