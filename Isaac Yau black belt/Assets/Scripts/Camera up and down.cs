@@ -10,19 +10,22 @@ public class Cameraupanddown : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Get how much the mouse moved this frame, multiplied by sensitivity
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        // 1. Look UP and DOWN (Rotates the camera on the X axis)
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f); // Prevents flipping upside down
-
-        transform.rotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Get how much the mouse moved this frame, multiplied by sensitivity
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+
+        xRotation -= mouseY;
+
+        xRotation = Mathf.Clamp(xRotation, -85f, 85f);
+        // Get how much the mouse moved this frame, multiplied by sensitivity
+
+        // 2. Look LEFT and RIGHT (Rotates the entire player body on the Y axis)
+        gameObject.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         
     }
 }

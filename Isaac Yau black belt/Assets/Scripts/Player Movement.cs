@@ -14,8 +14,10 @@ public class PlayerMovement : MonoBehaviour
     public Transform playerBody; // Assign your Player capsule/object here
     public bool isOnWall = false;
     public bool isOnGround = true;
+    public bool rightCollision;
+    public bool leftCollision;
 
-    private float xRotation = 0f;
+    private float yRotation = 0f;
 
     
 
@@ -30,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 direction = transform.forward;
         Vector3 directionRight = transform.right;
-
+        rb.velocity = new Vector3(0, rb.velocity.y, 0);
         if (Input.GetKey("w"))
         {
             Vector3 move = direction * speed;
@@ -58,17 +60,22 @@ public class PlayerMovement : MonoBehaviour
                 rb.AddForce(Vector3.up * speed, ForceMode.Impulse);
                 if (Input.GetKey("a"))
                 {
+                    Debug.Log("R WJ");
                     Vector3 move = directionRight * -speed; // Negative right goes left
                     rb.velocity = new Vector3(move.x, rb.velocity.y, move.z);
+                    jumpCounter++;
                 }
                 if (Input.GetKey("d"))
                 {
+                    Debug.Log("L WJ");
                     Vector3 move = directionRight * speed; // Use directionRight for both X and Z
                     rb.velocity = new Vector3(move.x, rb.velocity.y, move.z);
+                    jumpCounter++;
                 }
             }
             else if (isOnGround)
             {
+                Debug.Log("jump");
                 //transform.Translate(Vector3.up * speed * Time.deltaTime);
                 rb.AddForce(Vector3.up * speed, ForceMode.Impulse);
                 rb.velocity += new Vector3(0,1,0);
@@ -76,33 +83,31 @@ public class PlayerMovement : MonoBehaviour
             }
 
         }
-        IEnumerator DelayedAction()
-        {
-            // 1. Code BEFORE the delay
-            jumpCounter -= 1;
-            isOnGround = false;
-
-            // 2. The Delay (pauses here for 2 seconds without freezing the game)
-            yield return new WaitForSeconds(2f);
-
-            // 3. Code AFTER the delay
-            jumpCounter += 1;
-        }
+      
 
 
         // Get how much the mouse moved this frame, multiplied by sensitivity
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
 
-        // 2. Look LEFT and RIGHT (Rotates the entire player body on the Y axis)
-        gameObject.transform.Rotate(Vector3.up * mouseX);
+        yRotation += mouseX;
 
         // Get how much the mouse moved this frame, multiplied by sensitivity
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
         // 2. Look LEFT and RIGHT (Rotates the entire player body on the Y axis)
-        gameObject.transform.Rotate(Vector3.up * mouseY);
+        gameObject.transform.localRotation = Quaternion.Euler(0f, yRotation, 0f);
     }
+    IEnumerator DelayedAction()
+    {
+        // 1. Code BEFORE the delay
+        jumpCounter -= 1;
+        isOnGround = false;
 
+        // 2. The Delay (pauses here for 2 seconds without freezing the game)
+        yield return new WaitForSeconds(2f);
+
+        // 3. Code AFTER the delay
+        jumpCounter += 1;
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Floor"))
